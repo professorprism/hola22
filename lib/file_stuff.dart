@@ -1,3 +1,7 @@
+// file_stuff.dart
+// Barrett Koster
+// This demos some basic file io in flutter.
+
 import "dart:io";
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
@@ -28,19 +32,22 @@ class FileStuffHome extends StatelessWidget
   @override
   Widget build( BuildContext context ) 
   { 
-    // Future<String> mainDirPath = whereAmI();
     Future<String> contents = readFile();
     writeFile("hi there");
     return Scaffold
     ( appBar: AppBar( title: Text("file stuff - barrett") ),
-      body: FutureBuilder
-      ( future: contents,
-        builder: (context, snapshot ) 
-        { if ( snapshot.connectionState == ConnectionState.done )
-          { return Text(snapshot.data!); }
-          else
-          { return Text("loading ... "); }
-        }
+      body: Column
+      ( children:
+        [ FutureBuilder
+          ( future: contents,
+            builder: (context, snapshot ) 
+            { if ( snapshot.connectionState == ConnectionState.done )
+              { return Text(snapshot.data!); }
+              else
+              { return Text("loading ... "); }
+            }
+          ),
+        ],
       ),
     );
   }
@@ -56,6 +63,7 @@ class FileStuffHome extends StatelessWidget
   
   Future<String> readFile() async
   { await Future.delayed( const Duration(seconds:2) ); // adds drama
+    String myStuff = await whereAmI();
     String filePath = "$myStuff/stuff.txt";
     File fodder = File(filePath);
     String contents = fodder.readAsStringSync();
