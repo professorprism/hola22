@@ -66,49 +66,53 @@ class FileStuff2 extends StatelessWidget
     // writeFile("hi there");
     return Scaffold
     ( appBar: AppBar( title: Text("file stuff - barrett") ),
-      body: 
-      //Row
-      //( children:
-      //  [ 
-          Column
-          ( children:
-            [ FloatingActionButton
+      body: Column
+      ( children:
+        [ Container
+          ( height:300, width:400,
+            decoration: BoxDecoration( border:Border.all(width:1)),
+            child: makeListView(),
+          ),
+              FloatingActionButton // loads from the file
               ( onPressed: () async
                 { String contents = await readFile(); 
                   bc.update(contents);
                 },
-                child: Text("load"),
+                child: Text("load", style:TextStyle(fontSize:20)),
               ),
               bs.loaded
               ? Text(bs.text)
               : Text("not loaded yet"),
-
-              TextField
+              Container
+              ( height: 50, width: 200,
+                decoration: BoxDecoration( border: Border.all(width:2) ),
+                child: TextField
                 (controller:tec, style: TextStyle(fontSize:20) ),
-
-              Text("more stuff"),
-              Text("more stuff"),
-              Text("more stuff"),
-              Text("more stuff"),
-              Text("more stuff"),
-              Text("more stuff"),
-              Text("more stuff"),
-              Text("more stuff"),
-              Text("more stuff"),
-            ],
-          ), 
-          /* Container
-          ( height: 100, width:200, 
-            decoration: BoxDecoration( border: Border.all(width:2) ),
-            child: ListView
-            ( scrollDirection: Axis.vertical,
-              itemExtent: 50,
-              children: groc
-            ),
-          ) */
- //       ],
- //     ),
+              ),
+          FloatingActionButton
+          ( onPressed: (){ writeFile(tec.text); },
+            child: Text("write", style:TextStyle(fontSize:20)),
+          ),
+        ],
+      ),
     );
+  }
+
+  ListView makeListView()
+  {
+    List<Widget> kids = [];
+    for ( int i=0; i<16; i++ )
+    { 
+      kids.add(Text("hi there"));
+    }
+
+    ListView lv = ListView
+    ( scrollDirection: Axis.vertical,
+      itemExtent: 30,
+      children: kids,
+    );
+
+    return lv;
   }
 
   Future<String> whereAmI() async
