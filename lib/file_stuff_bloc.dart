@@ -54,24 +54,60 @@ class FileStuff2 extends StatelessWidget
   { BufCubit bc = BlocProvider.of<BufCubit>(context);
     BufState bs = bc.state;
 
+    TextEditingController tec = TextEditingController();
+    tec.text = bs.loaded ? bs.text : "not loaded yet";
+
+    List<String> raw = ["apples","bananas","cherries","donuts", ];
+    List<Widget> groc = [];
+    for ( String s in raw )
+    { groc.add( Text(s) ); }
+
     // Future<String> contents = readFile();
     // writeFile("hi there");
     return Scaffold
     ( appBar: AppBar( title: Text("file stuff - barrett") ),
-      body: Column
-      ( children:
-        [ FloatingActionButton
-          ( onPressed: () async
-            { String contents = await readFile(); 
-              bc.update(contents);
-            },
-            child: Text("load"),
-          ),
-          bs.loaded
-          ? Text(bs.text)
-          : Text("not loaded yet"),
-        ],
-      ),
+      body: 
+      //Row
+      //( children:
+      //  [ 
+          Column
+          ( children:
+            [ FloatingActionButton
+              ( onPressed: () async
+                { String contents = await readFile(); 
+                  bc.update(contents);
+                },
+                child: Text("load"),
+              ),
+              bs.loaded
+              ? Text(bs.text)
+              : Text("not loaded yet"),
+
+              TextField
+                (controller:tec, style: TextStyle(fontSize:20) ),
+
+              Text("more stuff"),
+              Text("more stuff"),
+              Text("more stuff"),
+              Text("more stuff"),
+              Text("more stuff"),
+              Text("more stuff"),
+              Text("more stuff"),
+              Text("more stuff"),
+              Text("more stuff"),
+            ],
+          ), 
+          /* Container
+          ( height: 100, width:200, 
+            decoration: BoxDecoration( border: Border.all(width:2) ),
+            child: ListView
+            ( scrollDirection: Axis.vertical,
+              itemExtent: 50,
+              children: groc
+            ),
+          ) */
+ //       ],
+ //     ),
     );
   }
 
