@@ -25,6 +25,7 @@ class BoxState
       }
       boxes.add(c);
     }
+    // print("gs ----------- $boxes");
   }
 
   // This constructor is for playing the game.  We give it 
@@ -38,4 +39,7 @@ class BoxCubit extends Cubit<BoxState>
 
   void update(List<List<String>> bs ) 
   { emit( BoxState.update(bs) ); }
+
+  void reset( List<List<String>> gs )
+  { emit( BoxState.first(gs) ); }
 }

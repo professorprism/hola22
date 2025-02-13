@@ -13,8 +13,17 @@ class Boxy extends Padding
       child: Container
       ( width: width, height: height,
         decoration: BoxDecoration
-        ( border: Border.all(), ),
-        child: Text(letter, style: TextStyle(fontSize:20) ),
+        ( border: Border.all
+          ( width:(letter=="c" || letter=="s" || letter=="g" ? 4:1 ),
+          ), 
+          color: ( letter=="r" || letter=="s" )
+                 ? Colors.red
+                 : letter=="w"
+                   ? Colors.black
+                   : ( letter=="b" || letter=="c" )
+                     ? Colors.blue : Colors.white,
+        ),
+        child: Text(""),
       ),
     );
 }
