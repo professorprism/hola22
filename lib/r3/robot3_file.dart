@@ -3,6 +3,7 @@
 // This version of Robot is supposed to
 // read a puzzle file to start.  
 
+// More to do? ...
 // 1. detect when you have succeeded
 // 2. reset to try again
 // 3. move counter?
@@ -13,21 +14,20 @@ import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:path_provider/path_provider.dart";
 
-import "data/game_state.dart";
-import "data/box_state.dart";
-import "widgets/boxy.dart";
+import "game_state.dart";
+import "box_state.dart";
+import "boxy.dart";
 
 
 void main() 
 { 
  runApp(Robot());
 }
-
+  // dirList() is not used so far.
+  // The question is, where to put it.  
   Future<List<String>> dirList() async
   { List<String> theList = [];
-
     // await Future.delayed( const Duration(seconds:2) );
-
     Directory mainDir = await getApplicationDocumentsDirectory();
     String puzzlePath = "${mainDir.path}/puzzles";
     theList = await Directory(puzzlePath).list().map((entry) => entry.path).toList();
@@ -35,6 +35,8 @@ void main()
     return theList;
   }
 
+// This class just has widgets for the state variables
+// (and their BlocProviders ....)
 class Robot extends StatelessWidget
 { 
   Robot({super.key});
@@ -107,8 +109,8 @@ class Robot2 extends StatelessWidget
       body: Column
       ( children:
         [ loadGameButton( gc, bc ),
-          theGrid,
-          Row
+          theGrid, // the game board shows here
+          Row // up down left right buttons
           ( children: 
             [ moveButton("up",0,-1, context),
               moveButton("left",-1,0, context),
@@ -121,7 +123,11 @@ class Robot2 extends StatelessWidget
     );
   }
 
-  // FloatingActionButton 
+  // loadGameButton() has a dropdown menu of puzzles and
+  // a button to load.  The menu actually works on its own.
+  // The button was there before, as a warm up.
+  // The button still works; you can use it to reset (although
+  // 'reset' could be done without another file read).
   Row loadGameButton( GameCubit gc, BoxCubit bc )
   { // print("gs------ ${gc.state.board}");
     return Row
@@ -139,7 +145,7 @@ class Robot2 extends StatelessWidget
                   .toList(),
               onChanged: (value) { gc.loadFromFile(value!,bc); },
             ),
-        FloatingActionButton // obviated by dropdown
+        FloatingActionButton // obviated by dropdown, but still works
         ( onPressed: ()
           { String filename =  gc.state.filename; // "001.txt";
             gc.loadFromFile( filename, bc );
@@ -206,6 +212,9 @@ class Robot2 extends StatelessWidget
   }
 }
 
+
+// This class packs x,y into a single item.  We use it for
+// SOME things.
 class Coords
 {
   int x;

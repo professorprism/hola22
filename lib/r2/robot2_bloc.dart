@@ -13,9 +13,9 @@
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 
-import "data/game_state.dart";
-import "data/box_state.dart";
-import "widgets/boxy.dart";
+import "game_state.dart";
+import "box_state.dart";
+import "boxy.dart";
 
 
 void main() 
