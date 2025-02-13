@@ -10,7 +10,10 @@ import "package:path_provider/path_provider.dart";
 import "box_state.dart";
 
 class GameState
-{ // board is a list of lists that represent a
+{ 
+  String filename = "001.txt";
+
+  // board is a list of lists that represent a
   // Row of Columns of letters representing the board.
   // raster coordinates, from upper left.
   // The robot may not travel the entire rectangle.
@@ -27,19 +30,20 @@ class GameState
   GameState() 
   : board = 
     [ [ 'w','w','w','w','w','w','w'],
-      [ 'w',' ','r',' ',' ',' ','w'],
+      [ 'w',' ','r','b','g',' ','w'],
       [ 'w',' ',' ',' ',' ',' ','w'],
       [ 'w',' ',' ',' ',' ',' ','w'],
-      [ 'w',' ',' ','w','g',' ','w'],
       [ 'w',' ',' ',' ',' ',' ','w'],
       [ 'w',' ',' ',' ',' ',' ','w'],
-      [ 'w',' ','b',' ',' ',' ','w'],
+      [ 'w',' ',' ',' ',' ',' ','w'],
+      [ 'w',' ',' ',' ',' ',' ','w'],
       [ 'w',' ',' ',' ',' ',' ','w'],
       [ 'w','w','w','w','w','w','w'],
     ]
   ;
 
   GameState.loaded( this.board );
+  GameState.loaded2( this.board, this.filename );
 }
 
 class GameCubit extends Cubit<GameState>
@@ -51,6 +55,14 @@ class GameCubit extends Cubit<GameState>
   void loadFromFile( String filename, BoxCubit bc ) async
   {
     List<List<String>> theBoard = await readFile( filename );
+    // emit( GameState.loaded(theBoard) );
+    emit( GameState.loaded2(theBoard,filename) );
+    bc.reset( state.board );
+  }
+
+  void load(  BoxCubit bc ) async
+  {
+    List<List<String>> theBoard = await readFile( state.filename );
     emit( GameState.loaded(theBoard) );
     bc.reset( state.board );
   }
@@ -77,5 +89,17 @@ class GameCubit extends Cubit<GameState>
     // print("----------------------- $theBoard");
     return theBoard;
   }
+/*
+  static Future<List<String>> dirList() async
+  { List<String> theList = [];
 
+    await Future.delayed( const Duration(seconds:2) );
+
+    Directory mainDir = await getApplicationDocumentsDirectory();
+    String puzzlePath = "${mainDir.path}/puzzles";
+    theList = await Directory(puzzlePath).list().map((entry) => entry.path).toList();
+
+    return theList;
+  }
+*/
 }

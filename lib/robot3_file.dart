@@ -7,9 +7,11 @@
 // 2. reset to try again
 // 3. move counter?
 
+import "dart:io";
 
 import "package:flutter/material.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
+import "package:path_provider/path_provider.dart";
 
 import "data/game_state.dart";
 import "data/box_state.dart";
@@ -17,11 +19,24 @@ import "widgets/boxy.dart";
 
 
 void main() 
-{ runApp(Robot());
+{ 
+ runApp(Robot());
 }
 
+  Future<List<String>> dirList() async
+  { List<String> theList = [];
+
+    // await Future.delayed( const Duration(seconds:2) );
+
+    Directory mainDir = await getApplicationDocumentsDirectory();
+    String puzzlePath = "${mainDir.path}/puzzles";
+    theList = await Directory(puzzlePath).list().map((entry) => entry.path).toList();
+
+    return theList;
+  }
+
 class Robot extends StatelessWidget
-{
+{ 
   Robot({super.key});
 
   @override
@@ -45,7 +60,9 @@ class Robot extends StatelessWidget
 }
 
 class Robot2 extends StatelessWidget
-{
+{ 
+  Robot2({super.key});
+
   @override
   Widget build( BuildContext context )
   {
@@ -104,18 +121,36 @@ class Robot2 extends StatelessWidget
     );
   }
 
-  FloatingActionButton loadGameButton( GameCubit gc, BoxCubit bc )
+  // FloatingActionButton 
+  Row loadGameButton( GameCubit gc, BoxCubit bc )
   { // print("gs------ ${gc.state.board}");
-    return FloatingActionButton
-    ( onPressed: ()
-      { String filename = "001.txt";
-        gc.loadFromFile( filename, bc );
-        // bc.reset( gc.state.board ); does not work here first time.
-        // gc.loadFromFile is async, so this bc plows ahead without
-        // new stuff.  Do it from inside gc.loadFromFile after waiting
-        // for the board to load from the file.
-      },
-      child: Text("load", style:TextStyle(fontSize:20)),
+    return Row
+    ( children:
+      [     DropdownButton<String>
+            (
+              value: gc.state.filename, // "001.txt",
+              alignment: Alignment.center,
+              padding: const EdgeInsets.all(10),
+              items: ["001.txt","002.txt",]
+                  .map((item) => DropdownMenuItem(
+                        value: item,
+                        child: Text(item),
+                      ))
+                  .toList(),
+              onChanged: (value) { gc.loadFromFile(value!,bc); },
+            ),
+        FloatingActionButton // obviated by dropdown
+        ( onPressed: ()
+          { String filename =  gc.state.filename; // "001.txt";
+            gc.loadFromFile( filename, bc );
+            // bc.reset( gc.state.board ); does not work here first time.
+            // gc.loadFromFile is async, so this bc plows ahead without
+            // new stuff.  Do it from inside gc.loadFromFile after waiting
+            // for the board to load from the file.
+          },
+          child: Text("load", style:TextStyle(fontSize:20)),
+        ),
+      ],
     );
   }
 
